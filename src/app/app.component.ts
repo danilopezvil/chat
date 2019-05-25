@@ -7,31 +7,31 @@ import { MessageService } from './services/message.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'chat';
+  title = 'SimpleChat';
   message = '';
-  chats = [
-    'Lorem ipsum dolor sit',
-    'amet consectetur adipisicing elit',
-    'Obcaecati neque odit delectus',
-    'error ducimus sequi dolorem',
-    'nihil at provident architecto',
-    'magnam earum possimus',
-    'itaque adipisci veritatis',
-    'aut, autem tenetur hic.'];
-
-    constructor(message: MessageService) {
-
+  chats = [];
+  username;
+  constructor(private messageService: MessageService) {
+      this.messageService.getChats().subscribe((data) => {
+        this.chats = data;
+        window.setTimeout(() => {
+          const elem = document.getElementById('scrolldiv');
+          elem.scrollTop = elem.scrollHeight;
+        }, 500);
+      });
     }
 
     addChat() {
       if (this.message.length === 0 ) {
         return;
       }
-      this.chats.push(this.message);
+      // this.chats.push(this.message);
+      this.messageService.addChat(this.message);
       this.message = '';
-      window.setInterval(() => {
-        const elem = document.getElementById('scrolldiv');
-        elem.scrollTop = elem.scrollHeight;
-      }, 500);
+    }
+
+    addUser(user) {
+      this.messageService.addUser(user);
+      this.username = user;
     }
 }
